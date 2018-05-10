@@ -23,6 +23,7 @@ class BezieArrow @JvmOverloads constructor(
         paint.style = Paint.Style.STROKE
         paint.color = Color.parseColor("#f5a623")
         paint.strokeWidth = 10f
+        paint.strokeCap = Paint.Cap.ROUND
     }
 
     fun setStart(x: Float, y: Float) {
