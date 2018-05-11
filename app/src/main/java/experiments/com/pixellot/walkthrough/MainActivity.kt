@@ -41,13 +41,15 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setEndForArrow() {
-        arrow.setEnd(button.x, button.y + button.height / 2)
+        arrow.setEnd(button.x + button.width, button.y + button.height / 2)
+//        arrow.setEnd(button.x, button.y + button.height / 2)
     }
 
     private fun drawArrow(newX: Float, newY: Float) {
         button.x = newX
         button.y = newY
-        arrow.setEnd(button.x, button.y + button.height / 2)
+//        arrow.setEnd(button.x, button.y + button.height / 2)
+        arrow.setEnd(button.x + button.width, button.y + button.height / 2)
         arrow.invalidate()
     }
 

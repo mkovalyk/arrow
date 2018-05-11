@@ -6,7 +6,7 @@ import android.util.AttributeSet
 import android.util.Log
 import android.view.View
 import kotlin.math.PI
-import kotlin.math.atan
+import kotlin.math.atan2
 import kotlin.math.cos
 import kotlin.math.sin
 
@@ -19,8 +19,8 @@ class BezieArrow @JvmOverloads constructor(
 ) : View(context, attrs, defStyleAttr) {
     private val start = PointF()
     private val end = PointF()
-    private val firstMultiplier = PointF(0.1f, 0f)
-    private val secondMultiplier = PointF(-0.1f, -0.1f)
+    private val firstMultiplier = PointF(0.2f, 0f)
+    private val secondMultiplier = PointF(-0.1f, 0f)
     private val line = Paint(Paint.ANTI_ALIAS_FLAG)
     private val path = Path()
     private val arrowPath = Path()
@@ -62,11 +62,11 @@ class BezieArrow @JvmOverloads constructor(
         result.y = before.y
         val angle = getAngle(end, result)
 
-        firstArrowVertex.x = end.x - cos(angle - angleDegree) * radius
-        firstArrowVertex.y = end.y - sin(angle - angleDegree) * radius
+        firstArrowVertex.x = end.x + cos(angle - angleDegree) * radius
+        firstArrowVertex.y = end.y + sin(angle - angleDegree) * radius
 
-        secondArrowVertex.x = end.x - cos(angle + angleDegree) * radius
-        secondArrowVertex.y = end.y - sin(angle + angleDegree) * radius
+        secondArrowVertex.x = end.x + cos(angle + angleDegree) * radius
+        secondArrowVertex.y = end.y + sin(angle + angleDegree) * radius
 
 //        thirdArrowVertex.x = end.x + cos(angle) * radius * 0.5f
 //        thirdArrowVertex.y = end.y + sin(angle) * radius * 0.5f
@@ -85,7 +85,7 @@ class BezieArrow @JvmOverloads constructor(
 
 
     fun getAngle(first: PointF, second: PointF): Float {
-        val angle = atan((second.y - first.y) / (second.x - first.x))
+        val angle = atan2((second.y - first.y), (second.x - first.x))
         Log.d(TAG, "getAngle: ${Math.toDegrees(angle.toDouble())}")
         return angle
     }
