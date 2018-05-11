@@ -3,27 +3,36 @@ package experiments.com.pixellot.walkthrough
 import android.content.Context
 import android.graphics.*
 import android.util.AttributeSet
+import android.util.Log
 import android.view.View
 
 
 /**
  * Created on 10.05.18.
  */
+
+
 class BezieArrow @JvmOverloads constructor(
         context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : View(context, attrs, defStyleAttr) {
     private val start = PointF()
     private val end = PointF()
-    private val firstMultiplier = PointF()
-    private val secondMultiplier = PointF()
-    private val paint: Paint = Paint(Paint.ANTI_ALIAS_FLAG)
+    private val firstMultiplier = PointF(0.1f, 0f)
+    private val secondMultiplier = PointF(-0.1f, 0f)
+    private val line = Paint(Paint.ANTI_ALIAS_FLAG)
     private val path = Path()
+    private val arrowPath = Path()
+    private val arrow = Paint(Paint.ANTI_ALIAS_FLAG)
 
     init {
-        paint.style = Paint.Style.STROKE
-        paint.color = Color.parseColor("#f5a623")
-        paint.strokeWidth = 10f
-        paint.strokeCap = Paint.Cap.ROUND
+        line.style = Paint.Style.STROKE
+        line.color = Color.parseColor("#f5a623")
+        line.strokeWidth = 6f
+        line.strokeCap = Paint.Cap.ROUND
+
+        arrow.style = Paint.Style.FILL
+        arrow.color = Color.parseColor("#f5a623")
+        arrow.strokeWidth = 3f
     }
 
     fun setStart(x: Float, y: Float) {
@@ -32,30 +41,15 @@ class BezieArrow @JvmOverloads constructor(
         evaluateMultipliers()
     }
 
-    fun evaluateMultipliers() {
-        val resultPointX = (end.x + start.x) / 2
-        val resultPointY = (end.y + start.y) / 2
+    lateinit var first: PointF
+    lateinit var second: PointF
 
-        if (start.x == 0f) {
-            firstMultiplier.x = 1f
-        } else {
-            firstMultiplier.x = resultPointX / start.x
-        }
-        if (start.y == 0f) {
-            firstMultiplier.y = 1f
-        } else {
-            firstMultiplier.y = resultPointY / start.y
-        }
-        if (resultPointX == 0f) {
-            secondMultiplier.x = 1f
-        } else {
-            secondMultiplier.x = end.x / resultPointX
-        }
-        if (resultPointY == 0f) {
-            secondMultiplier.y = 1f
-        } else {
-            secondMultiplier.y = end.y / resultPointY
-        }
+    fun evaluateMultipliers() {
+        first = PointF(start.x + firstMultiplier.x * start.x, start.y + firstMultiplier.y * start.y)
+        second = PointF(end.x + end.x * secondMultiplier.x, end.y + end.y * secondMultiplier.y)
+        Log.d("BezierArrow", "First: $first. Second: $second")
+
+
     }
 
     fun setEnd(x: Float, y: Float) {
@@ -67,8 +61,10 @@ class BezieArrow @JvmOverloads constructor(
     override fun onDraw(canvas: Canvas) {
         path.reset()
         path.moveTo(start.x, start.y)
-        path.cubicTo(firstMultiplier.x * start.x, firstMultiplier.y * start.y, end.x / secondMultiplier.x, end.y / secondMultiplier.y, end.x, end.y)
-        canvas.drawPath(path, paint)
+        path.cubicTo(first.x, first.y, second.x, second.y, end.x, end.y)
+        canvas.drawPath(path, line)
+        arrowPath.reset()
+        arrowPath.moveTo(end.x, end.y)
         super.onDraw(canvas)
     }
 }
