@@ -17,24 +17,55 @@ import kotlin.math.sin
 class BezieArrow @JvmOverloads constructor(
         context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : View(context, attrs, defStyleAttr) {
-    private val start = PointF()
-    private val end = PointF()
-    private val firstMultiplier = PointF(0.2f, 0f)
-    private val secondMultiplier = PointF(-0.1f, 0f)
+    private val start: PointF
+    private val end: PointF
+    private val firstMultiplier: PointF
+    //= PointF(0.2f, 0f)
+    private val secondMultiplier: PointF
+    //= PointF(-0.1f, 0f)
     private val line = Paint(Paint.ANTI_ALIAS_FLAG)
     private val path = Path()
     private val arrowPath = Path()
     private val arrow = Paint(Paint.ANTI_ALIAS_FLAG)
+    private val first = PointF()
+    private val second = PointF()
+    private val result = PointF()
+
+    private val radius = 35
+    private val angleDegree = PI.toFloat() / 12
+    private val firstArrowVertex = PointF()
+    private val secondArrowVertex = PointF()
+    private val thirdArrowVertex = PointF()
+    private val TAG = "BezierArrow"
 
     init {
+        val styleAttrs = context.obtainStyledAttributes(attrs, R.styleable.BezieArrow)
+
+        val fromX = styleAttrs.getFloat(R.styleable.BezieArrow_fromX, 0f)
+        val toX = styleAttrs.getFloat(R.styleable.BezieArrow_toX, 0f)
+        val fromY = styleAttrs.getFloat(R.styleable.BezieArrow_fromY, 0f)
+        val toY = styleAttrs.getFloat(R.styleable.BezieArrow_toY, 0f)
+        val firstMultiplierX = styleAttrs.getFloat(R.styleable.BezieArrow_firstMultiplierX, 0f)
+        val firstMultiplierY = styleAttrs.getFloat(R.styleable.BezieArrow_firstMultiplierY, 0f)
+        val secondMultiplierX = styleAttrs.getFloat(R.styleable.BezieArrow_secondMultiplierX, 0f)
+        val secondMultiplierY = styleAttrs.getFloat(R.styleable.BezieArrow_secondMultiplierY, 0f)
+        val width = styleAttrs.getDimension(R.styleable.BezieArrow_line_width, 6f)
+        val color = styleAttrs.getColor(R.styleable.BezieArrow_line_color, Color.parseColor("#f5a623"))
+        styleAttrs.recycle()
+
+        start = PointF(fromX, fromY)
+        end = PointF(toX, toY)
+        firstMultiplier = PointF(firstMultiplierX, firstMultiplierY)
+        secondMultiplier = PointF(secondMultiplierX, secondMultiplierY)
+
         line.style = Paint.Style.STROKE
-        line.color = Color.parseColor("#f5a623")
-        line.strokeWidth = 6f
+        line.color = color
+        line.strokeWidth = width
         line.strokeCap = Paint.Cap.ROUND
 
         arrow.style = Paint.Style.FILL
-        arrow.color = Color.parseColor("#f5a623")
-        arrow.strokeWidth = 3f
+        arrow.color = color
+        evaluateMultipliers()
     }
 
     fun setStart(x: Float, y: Float) {
@@ -43,12 +74,8 @@ class BezieArrow @JvmOverloads constructor(
         evaluateMultipliers()
     }
 
-    val first = PointF()
-    val second = PointF()
-    val result = PointF()
-    private val TAG = "BezierArrow"
 
-    fun evaluateMultipliers() {
+    private fun evaluateMultipliers() {
         first.x = start.x + firstMultiplier.x * start.x
         first.y = start.y + firstMultiplier.y * start.y
 
@@ -77,13 +104,6 @@ class BezieArrow @JvmOverloads constructor(
         Log.d(TAG, "evaluateMultipliers: first: $firstArrowVertex second: $secondArrowVertex")
     }
 
-    private val radius = 35
-    private val angleDegree = PI.toFloat() / 12
-    private val firstArrowVertex = PointF()
-    private val secondArrowVertex = PointF()
-    private val thirdArrowVertex = PointF()
-
-
     fun getAngle(first: PointF, second: PointF): Float {
         val angle = atan2((second.y - first.y), (second.x - first.x))
         Log.d(TAG, "getAngle: ${Math.toDegrees(angle.toDouble())}")
@@ -101,7 +121,7 @@ class BezieArrow @JvmOverloads constructor(
         path.reset()
 
         path.moveTo(start.x, start.y)
-        path.cubicTo(first.x, first.y, second.x, second.y, end.x, end.y)
+        path.cubicTo(first.x, first.y, second.x, second.y, result.x, result.y)
         canvas.drawPath(path, line)
 
         // draw arrow with correct angle
@@ -112,9 +132,6 @@ class BezieArrow @JvmOverloads constructor(
         arrowPath.lineTo(thirdArrowVertex.x, thirdArrowVertex.y)
         arrowPath.close()
         canvas.drawPath(arrowPath, arrow)
-        canvas.drawCircle(first.x, first.y, 20f, line)
-        canvas.drawCircle(second.x, second.y, 20f, line)
-//        canvas.drawCircle(result.x, result.y, 10f, arrow)
         super.onDraw(canvas)
     }
 }

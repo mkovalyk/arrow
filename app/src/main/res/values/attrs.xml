@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="BezieArrow">
+        <attr name="fromX" format="float"/>
+        <attr name="toX" format="float"/>
+        <attr name="fromY" format="float"/>
+        <attr name="toY" format="float"/>
+        <attr name="firstMultiplierX" format="float"/>
+        <attr name="firstMultiplierY" format="float"/>
+        <attr name="secondMultiplierX" format="float"/>
+        <attr name="secondMultiplierY" format="float"/>
+        <attr name="line_width" format="reference|float"/>
+        <attr name="line_color" format="reference|color"/>
+    </declare-styleable>
+</resources>

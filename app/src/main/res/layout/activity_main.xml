@@ -2,6 +2,7 @@
 <FrameLayout
     android:id="@+id/layout"
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -12,7 +13,7 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="start|bottom"
+        android:layout_gravity="center_horizontal|bottom"
         android:layout_marginBottom="32dp"
         android:orientation="vertical">
 
@@ -48,6 +49,16 @@
         android:id="@+id/arrow"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_gravity="center"/>
+        android:layout_gravity="center"
+        app:firstMultiplierX="0"
+        app:firstMultiplierY="0"
+        app:fromX="1000"
+        app:fromY="500"
+        app:line_color="#f5a623"
+        app:line_width="2dp"
+        app:secondMultiplierX="-0.2"
+        app:secondMultiplierY="-0.1"
+        app:toX="1000"
+        app:toY="100"/>
 
 </FrameLayout>

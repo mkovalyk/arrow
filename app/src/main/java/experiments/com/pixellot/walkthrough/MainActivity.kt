@@ -6,13 +6,10 @@ import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import kotlinx.android.synthetic.main.activity_main.*
-import java.util.*
 
 
 class MainActivity : AppCompatActivity() {
     val TAG = "MainActivity"
-    private val random = Random(100)
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -23,6 +20,8 @@ class MainActivity : AppCompatActivity() {
             setEndForArrow()
         }
         layout.setOnTouchListener { v, event -> buttonTouched(v, event) }
+
+        val builder = WalkthroughBuilder()
     }
 
     var oldX: Float = 0f
@@ -41,15 +40,15 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setEndForArrow() {
-        arrow.setEnd(button.x + button.width, button.y + button.height / 2)
-//        arrow.setEnd(button.x, button.y + button.height / 2)
+//        arrow.setEnd(button.x + button.width, button.y + button.height / 2)
+        arrow.setEnd(button.x, button.y + button.height / 2)
     }
 
     private fun drawArrow(newX: Float, newY: Float) {
         button.x = newX
         button.y = newY
-//        arrow.setEnd(button.x, button.y + button.height / 2)
-        arrow.setEnd(button.x + button.width, button.y + button.height / 2)
+        arrow.setEnd(button.x, button.y + button.height / 2)
+//        arrow.setEnd(button.x + button.width, button.y + button.height / 2)
         arrow.invalidate()
     }
 
