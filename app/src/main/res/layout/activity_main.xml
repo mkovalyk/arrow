@@ -10,32 +10,13 @@
     android:orientation="vertical"
     tools:context=".MainActivity">
 
-    <LinearLayout
+    <experiments.com.pixellot.walkthrough.HintLayout
+        android:id="@+id/hintLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal|bottom"
+        android:layout_gravity="start|bottom"
         android:layout_marginBottom="32dp"
-        android:orientation="vertical">
-
-        <TextView
-            android:id="@+id/hint"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:fontFamily="@font/barokah"
-            android:text="Add Tags &amp; Create Highlights!!"
-            android:textColor="#f5a623"
-            android:textSize="24sp"
-            android:textStyle="bold"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:text="Place your tag on exact moment of action"
-            android:textColor="#ffd38a"
-            android:textSize="14.4sp"/>
-    </LinearLayout>
+        android:orientation="vertical"/>
 
     <Button
         android:id="@+id/button"
@@ -45,20 +26,20 @@
         android:background="@android:color/transparent"
         android:text="start"/>
 
-    <experiments.com.pixellot.walkthrough.BezieArrow
-        android:id="@+id/arrow"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="center"
-        app:firstMultiplierX="0"
-        app:firstMultiplierY="0"
-        app:fromX="1000"
-        app:fromY="500"
-        app:line_color="#f5a623"
-        app:line_width="2dp"
-        app:secondMultiplierX="-0.2"
-        app:secondMultiplierY="-0.1"
-        app:toX="1000"
-        app:toY="100"/>
+    <!--<experiments.com.pixellot.walkthrough.BezieArrow-->
+        <!--android:id="@+id/arrow"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:layout_gravity="center"-->
+        <!--app:firstMultiplierX="0.3"-->
+        <!--app:firstMultiplierY="0"-->
+        <!--app:fromX="1250"-->
+        <!--app:fromY="700"-->
+        <!--app:line_color="#f5a623"-->
+        <!--app:line_width="2dp"-->
+        <!--app:secondMultiplierX="-0.2"-->
+        <!--app:secondMultiplierY="-0.1"-->
+        <!--app:toX="1600"-->
+        <!--app:toY="450"/>-->
 
 </FrameLayout>

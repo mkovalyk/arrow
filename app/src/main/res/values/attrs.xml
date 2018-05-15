@@ -9,7 +9,7 @@
         <attr name="firstMultiplierY" format="float"/>
         <attr name="secondMultiplierX" format="float"/>
         <attr name="secondMultiplierY" format="float"/>
-        <attr name="line_width" format="reference|float"/>
+        <attr name="line_width" format="dimension"/>
         <attr name="line_color" format="reference|color"/>
     </declare-styleable>
 </resources>

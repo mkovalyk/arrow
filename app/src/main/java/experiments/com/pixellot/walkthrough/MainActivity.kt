@@ -1,5 +1,6 @@
 package experiments.com.pixellot.walkthrough
 
+import android.graphics.PointF
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
@@ -10,18 +11,34 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
     val TAG = "MainActivity"
+    private lateinit var walkthrough: Walkthrough
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-//        button.setOnClickListener { drawArrow(random.nextInt(500).toFloat(), random.nextInt(500).toFloat()) }
-
-        arrow.post {
-            setStartForArrow()
-            setEndForArrow()
-        }
         layout.setOnTouchListener { v, event -> buttonTouched(v, event) }
 
-        val builder = WalkthroughBuilder()
+        hintLayout.post(::createWalkthrough)
+    }
+
+    private fun createWalkthrough() {
+        val builder = WalkthroughBuilder(this)
+        with(builder) {
+            hintLayout2 = hintLayout
+            Log.d(TAG, "Before: ${hintLayout.hint} + Text: ${hintLayout.hint.text}")
+            text = "Set from Builder..."
+            Log.d(TAG, "Before: ${hintLayout.hint}+ Text: ${hintLayout.hint.text}")
+            hintLayout.requestLayout()
+            description = "Set description from Builder.."
+            from(hintLayout.hint, WalkthroughBuilder.HorizontalAlignment.CENTER, WalkthroughBuilder.VerticalAlignment.CENTER, R.id.layout)
+            to(button, WalkthroughBuilder.HorizontalAlignment.START, WalkthroughBuilder.VerticalAlignment.CENTER, R.id.layout)
+            counter = TempWalkthroughCounter()
+            commonLayout = layout
+            startAnchor = PointF(0.3f, 0f)
+            endAnchor = PointF(-0.2f, 0.1f)
+
+            walkthrough = builder.build()
+        }
+        walkthrough.show(false)
     }
 
     var oldX: Float = 0f
@@ -34,46 +51,37 @@ class MainActivity : AppCompatActivity() {
             return true
         }
         if (event.action == MotionEvent.ACTION_UP || event.action == MotionEvent.ACTION_POINTER_UP) {
-            drawArrow(event.x, event.y)
+            moveArrow(event.x, event.y)
         }
         return false
     }
 
     private fun setEndForArrow() {
 //        arrow.setEnd(button.x + button.width, button.y + button.height / 2)
-        arrow.setEnd(button.x, button.y + button.height / 2)
+        walkthrough.arrow.setEnd(button.x, button.y + button.height / 2)
     }
 
-    private fun drawArrow(newX: Float, newY: Float) {
+    private fun moveArrow(newX: Float, newY: Float) {
         button.x = newX
         button.y = newY
-        arrow.setEnd(button.x, button.y + button.height / 2)
-//        arrow.setEnd(button.x + button.width, button.y + button.height / 2)
-        arrow.invalidate()
+        walkthrough.arrow.setEnd(button.x, button.y + button.height / 2)
+//        walkthrough.arrow.setEnd(button.x + button.width, button.y + button.height / 2)
+        walkthrough.arrow.invalidate()
     }
 
-    private fun setStartForArrow() {
-        var x = getRelativeLeft(hint)
-        var y = getRelativeTop(hint)
-        Log.d(TAG, "X: $x Y: $y")
-        x += hint.width
-        y += hint.height / 2
-        arrow.setStart(x.toFloat(), y.toFloat())
-    }
+    inner class TempWalkthroughCounter : WalkthroughCounter {
+        private var counter = 0
+        override fun walkthroughShowed() {
+            counter++
+        }
 
-    private fun getRelativeLeft(myView: View): Int {
-        Log.d(TAG, "relativeLeft: $myView")
-        return if (myView.id == layout.id)
-            myView.left
-        else
-            myView.left + getRelativeLeft(myView.parent as View)
-    }
+        override fun getCountOfImpressions(): Int {
+            return counter
+        }
 
-    private fun getRelativeTop(myView: View): Int {
-        Log.d(TAG, "relativeTop: $myView")
-        return if (myView.id == layout.id)
-            myView.top
-        else
-            myView.top + getRelativeTop(myView.parent as View)
+        override fun reset() {
+            counter = 0
+        }
+
     }
 }

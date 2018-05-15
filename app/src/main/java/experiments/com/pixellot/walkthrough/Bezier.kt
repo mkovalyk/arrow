@@ -5,7 +5,8 @@ import android.graphics.PointF
 /**
  * Created on 11.05.18.
  */
-class Bezier(val first: PointF, val second: PointF, val third: PointF, val forth: PointF) {
+internal class Bezier(private val first: PointF, private val second: PointF, private val third: PointF,
+                      private val forth: PointF) {
 
     fun findFor(t: Float): PointF {
 
