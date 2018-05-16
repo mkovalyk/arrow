@@ -51,7 +51,7 @@ class WalkthroughBuilder(val context: Context) {
         Objects.requireNonNull(commonLayout, "Set layout to proceed...")
         Objects.requireNonNull(counter, "...And don't forget to pass WalkthroughCounter.")
 
-        val arrow = BezieArrow(context, defStyleAttr = R.style.WalkthroughStyle)
+        val arrow = BezierArrow(context)
         arrow.setStart(start.x, start.y)
         arrow.setEnd(end.x, end.y)
         arrow.setFirstAnchorDelta(startAnchor.x, startAnchor.y)

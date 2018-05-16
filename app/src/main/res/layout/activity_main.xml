@@ -2,13 +2,13 @@
 <FrameLayout
     android:id="@+id/layout"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#80000000"
     android:orientation="vertical"
-    tools:context=".MainActivity">
+    tools:context=".MainActivity"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <experiments.com.pixellot.walkthrough.HintLayout
         android:id="@+id/hintLayout"
@@ -26,20 +26,22 @@
         android:background="@android:color/transparent"
         android:text="start"/>
 
-    <!--<experiments.com.pixellot.walkthrough.BezieArrow-->
+    <!--<experiments.com.pixellot.walkthrough.BezierArrow-->
         <!--android:id="@+id/arrow"-->
         <!--android:layout_width="match_parent"-->
         <!--android:layout_height="match_parent"-->
         <!--android:layout_gravity="center"-->
-        <!--app:firstMultiplierX="400"-->
-        <!--app:firstMultiplierY="100"-->
+        <!--app:firstDeltaX="400"-->
+        <!--app:firstDeltaY="100"-->
         <!--app:fromX="1250"-->
         <!--app:fromY="700"-->
         <!--app:line_color="#f5a623"-->
         <!--app:line_width="2dp"-->
-        <!--app:secondMultiplierX="-400"-->
-        <!--app:secondMultiplierY="-100"-->
+        <!--app:secondDeltaX="-400"-->
+        <!--app:secondDeltaY="-100"-->
         <!--app:toX="1600"-->
+        <!--app:arrow_angle="15"-->
+        <!--app:arrow_radius="16dp"-->
         <!--app:toY="450"/>-->
 
 </FrameLayout>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <declare-styleable name="BezieArrow">
+    <declare-styleable name="BezierArrow">
         <attr name="fromX" format="float"/>
         <attr name="toX" format="float"/>
         <attr name="fromY" format="float"/>
@@ -11,5 +11,7 @@
         <attr name="secondDeltaY" format="float"/>
         <attr name="line_width" format="dimension"/>
         <attr name="line_color" format="reference|color"/>
+        <attr name="arrow_radius" format="dimension"/>
+        <attr name="arrow_angle" format="float"/>
     </declare-styleable>
 </resources>

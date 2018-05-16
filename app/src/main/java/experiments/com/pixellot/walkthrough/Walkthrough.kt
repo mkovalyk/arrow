@@ -11,7 +11,7 @@ import android.view.View.VISIBLE
 /**
  * Created on 15.05.18.
  */
-class Walkthrough(var arrow: BezieArrow?, val counter: WalkthroughCounter,
+class Walkthrough(var arrow: BezierArrow?, val counter: WalkthroughCounter,
                   var hintLayout: HintLayout?, val uniqueId: String, val maxCountOfImpressions: Int,
                   val animated: Boolean) {
 

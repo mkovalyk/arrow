@@ -5,7 +5,6 @@ import android.graphics.*
 import android.util.AttributeSet
 import android.util.Log
 import android.view.View
-import kotlin.math.PI
 import kotlin.math.atan2
 import kotlin.math.cos
 import kotlin.math.sin
@@ -14,12 +13,12 @@ import kotlin.math.sin
 /**
  * Created on 10.05.18.
  */
-class BezieArrow @JvmOverloads constructor(
+class BezierArrow @JvmOverloads constructor(
         context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : View(context, attrs, defStyleAttr) {
 
-    val radius = 35
-    val angleDegree = PI.toFloat() / 12
+    private val radius: Float
+    private val angleDegree: Float
 
     private val start: PointF
     private val end: PointF
@@ -36,21 +35,24 @@ class BezieArrow @JvmOverloads constructor(
     private val firstArrowVertex = PointF()
     private val secondArrowVertex = PointF()
     private val thirdArrowVertex = PointF()
-    private val TAG = "BezierArrow"
+    private val tag = "BezierArrow"
 
     init {
-        val styleAttrs = context.obtainStyledAttributes(attrs, R.styleable.BezieArrow, defStyleAttr, R.style.WalkthroughStyle)
+        val styleAttrs = context.obtainStyledAttributes(attrs, R.styleable.BezierArrow, defStyleAttr, R.style.WalkthroughStyle)
 
-        val fromX = styleAttrs.getFloat(R.styleable.BezieArrow_fromX, 0f)
-        val toX = styleAttrs.getFloat(R.styleable.BezieArrow_toX, 0f)
-        val fromY = styleAttrs.getFloat(R.styleable.BezieArrow_fromY, 0f)
-        val toY = styleAttrs.getFloat(R.styleable.BezieArrow_toY, 0f)
-        val firstDeltaX = styleAttrs.getFloat(R.styleable.BezieArrow_firstDeltaX, 0f)
-        val firstDeltaY = styleAttrs.getFloat(R.styleable.BezieArrow_firstDeltaY, 0f)
-        val secondDeltaX = styleAttrs.getFloat(R.styleable.BezieArrow_secondDeltaX, 0f)
-        val secondDeltaY = styleAttrs.getFloat(R.styleable.BezieArrow_secondDeltaY, 0f)
-        val width = styleAttrs.getDimension(R.styleable.BezieArrow_line_width, 6f)
-        val color = styleAttrs.getColor(R.styleable.BezieArrow_line_color, Color.parseColor("#f5a623"))
+        val fromX = styleAttrs.getFloat(R.styleable.BezierArrow_fromX, 0f)
+        val toX = styleAttrs.getFloat(R.styleable.BezierArrow_toX, 0f)
+        val fromY = styleAttrs.getFloat(R.styleable.BezierArrow_fromY, 0f)
+        val toY = styleAttrs.getFloat(R.styleable.BezierArrow_toY, 0f)
+        val firstDeltaX = styleAttrs.getFloat(R.styleable.BezierArrow_firstDeltaX, 0f)
+        val firstDeltaY = styleAttrs.getFloat(R.styleable.BezierArrow_firstDeltaY, 0f)
+        val secondDeltaX = styleAttrs.getFloat(R.styleable.BezierArrow_secondDeltaX, 0f)
+        val secondDeltaY = styleAttrs.getFloat(R.styleable.BezierArrow_secondDeltaY, 0f)
+        val width = styleAttrs.getDimension(R.styleable.BezierArrow_line_width, 6f)
+        val color = styleAttrs.getColor(R.styleable.BezierArrow_line_color, Color.parseColor("#f5a623"))
+        radius = styleAttrs.getDimension(R.styleable.BezierArrow_arrow_radius, 80f)
+        angleDegree = Math.toRadians(styleAttrs.getFloat(R.styleable.BezierArrow_arrow_angle, 15f).toDouble()).toFloat()
+
         styleAttrs.recycle()
 
         start = PointF(fromX, fromY)
@@ -98,7 +100,7 @@ class BezieArrow @JvmOverloads constructor(
 
         secondAnchor.x = end.x + secondAnchorDeltas.x
         secondAnchor.y = end.y + secondAnchorDeltas.y
-        Log.d(TAG, "First: $firstAnchor. Second: $secondAnchor")
+        Log.d(tag, "First: $firstAnchor. Second: $secondAnchor")
 
         val before = Bezier(start, firstAnchor, secondAnchor, end).findFor(0.99f)
         result.x = before.x
@@ -113,12 +115,12 @@ class BezieArrow @JvmOverloads constructor(
 
         thirdArrowVertex.x = end.x
         thirdArrowVertex.y = end.y
-        Log.d(TAG, "evaluateArrowPoints: first: $firstArrowVertex second: $secondArrowVertex")
+        Log.d(tag, "evaluateArrowPoints: first: $firstArrowVertex second: $secondArrowVertex")
     }
 
     private fun getAngle(first: PointF, second: PointF): Float {
         val angle = atan2((second.y - first.y), (second.x - first.x))
-        Log.d(TAG, "getAngle: ${Math.toDegrees(angle.toDouble())}")
+        Log.d(tag, "getAngle: ${Math.toDegrees(angle.toDouble())}")
         return angle
     }
 
@@ -132,7 +134,6 @@ class BezieArrow @JvmOverloads constructor(
 
         // draw arrow with correct angle
         arrowPath.reset()
-//        arrowPath.moveTo(end.x, end.y)
         arrowPath.moveTo(firstArrowVertex.x, firstArrowVertex.y)
         arrowPath.lineTo(secondArrowVertex.x, secondArrowVertex.y)
         arrowPath.lineTo(thirdArrowVertex.x, thirdArrowVertex.y)
