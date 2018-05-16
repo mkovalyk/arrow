@@ -37,8 +37,8 @@ class WalkthroughBuilder(val context: Context) {
     fun from(view: View, hor: HorizontalAlignment, ver: VerticalAlignment, parentId: Int): WalkthroughBuilder {
         val left = getRelativeLeft(view, parentId)
         val top = getRelativeTop(view, parentId)
-        start.x = left + hor.multiplier() * view.width
-        start.y = top + ver.multiplier() * view.height
+        start.x = left + hor.multiplier() * view.measuredWidth
+        start.y = top + ver.multiplier() * view.measuredHeight
         Log.d(TAG, "from: $start $view.")
         return this
     }
@@ -46,8 +46,8 @@ class WalkthroughBuilder(val context: Context) {
     fun to(view: View, hor: HorizontalAlignment, ver: VerticalAlignment, parentId: Int): WalkthroughBuilder {
         val left = getRelativeLeft(view, parentId)
         val top = getRelativeTop(view, parentId)
-        end.x = left + hor.multiplier() * view.width
-        end.y = top + ver.multiplier() * view.height
+        end.x = left + hor.multiplier() * view.measuredWidth
+        end.y = top + ver.multiplier() * view.measuredHeight
         return this
     }
 

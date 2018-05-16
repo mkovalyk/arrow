@@ -3,7 +3,6 @@ package experiments.com.pixellot.walkthrough
 import android.graphics.PointF
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import kotlinx.android.synthetic.main.activity_main.*
@@ -24,21 +23,22 @@ class MainActivity : AppCompatActivity() {
         val builder = WalkthroughBuilder(this)
         with(builder) {
             hintLayout2 = hintLayout
-            Log.d(TAG, "Before: ${hintLayout.hint} + Text: ${hintLayout.hint.text}")
             text = "Set from Builder..."
-            Log.d(TAG, "Before: ${hintLayout.hint}+ Text: ${hintLayout.hint.text}")
-            hintLayout.requestLayout()
             description = "Set description from Builder.."
-            from(hintLayout.hint, WalkthroughBuilder.HorizontalAlignment.CENTER, WalkthroughBuilder.VerticalAlignment.CENTER, R.id.layout)
-            to(button, WalkthroughBuilder.HorizontalAlignment.START, WalkthroughBuilder.VerticalAlignment.CENTER, R.id.layout)
-            counter = TempWalkthroughCounter()
-            commonLayout = layout
-            startAnchor = PointF(0.3f, 0f)
-            endAnchor = PointF(-0.2f, 0.1f)
 
-            walkthrough = builder.build()
+            // width of the view after changing text doesn't apply immediately.
+            hintLayout.post({
+                from(hintLayout.hint, WalkthroughBuilder.HorizontalAlignment.END, WalkthroughBuilder.VerticalAlignment.CENTER, R.id.layout)
+                to(button, WalkthroughBuilder.HorizontalAlignment.START, WalkthroughBuilder.VerticalAlignment.CENTER, R.id.layout)
+                counter = TempWalkthroughCounter()
+                commonLayout = layout
+                startAnchor = PointF(0.3f, 0f)
+                endAnchor = PointF(-0.2f, 0.1f)
+
+                walkthrough = builder.build()
+                walkthrough.show(false)
+            })
         }
-        walkthrough.show(false)
     }
 
     var oldX: Float = 0f
@@ -54,11 +54,6 @@ class MainActivity : AppCompatActivity() {
             moveArrow(event.x, event.y)
         }
         return false
-    }
-
-    private fun setEndForArrow() {
-//        arrow.setEnd(button.x + button.width, button.y + button.height / 2)
-        walkthrough.arrow.setEnd(button.x, button.y + button.height / 2)
     }
 
     private fun moveArrow(newX: Float, newY: Float) {
