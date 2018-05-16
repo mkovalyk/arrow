@@ -5,15 +5,17 @@ import android.graphics.*
 import android.util.AttributeSet
 import android.util.Log
 import android.view.View
-import kotlin.math.PI
-import kotlin.math.atan2
-import kotlin.math.cos
-import kotlin.math.sin
+import kotlin.math.*
 
 
 /**
  * Created on 10.05.18.
  */
+
+fun PointF.distanceTo(another: PointF): Float {
+    return sqrt((this.x - another.x).pow(2) + (this.y - another.y).pow(2))
+}
+
 class BezieArrow @JvmOverloads constructor(
         context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : View(context, attrs, defStyleAttr) {
@@ -103,7 +105,9 @@ class BezieArrow @JvmOverloads constructor(
         Log.d(TAG, "First: $firstAnchor. Second: $secondAnchor")
 
 
-        val before = Bezier(start, firstAnchor, secondAnchor, end).findFor(0.96f)
+        // Point should varies between [0.93, 0.99] depending on distance to second anchor.
+        val proportion = 0.07f * end.distanceTo(secondAnchor) / end.distanceTo(start)
+        val before = Bezier(start, firstAnchor, secondAnchor, end).findFor(1.0f - min(0.07f, proportion))
         result.x = before.x
         result.y = before.y
         val angle = getAngle(end, result)
@@ -141,6 +145,7 @@ class BezieArrow @JvmOverloads constructor(
         arrowPath.lineTo(thirdArrowVertex.x, thirdArrowVertex.y)
         arrowPath.close()
         canvas.drawPath(arrowPath, arrow)
+        canvas.drawCircle(secondAnchor.x, secondAnchor.y, 20f, line)
         super.onDraw(canvas)
     }
 }
