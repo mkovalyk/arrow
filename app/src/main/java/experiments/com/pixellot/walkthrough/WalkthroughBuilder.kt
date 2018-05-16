@@ -13,26 +13,18 @@ import java.util.*
 class WalkthroughBuilder(val context: Context) {
     // mandatory
     var text: String? = null
-        set(value) {
-            field = value
-            hintLayout2?.hint?.text = value
-        }
     var description: String? = null
-        set(value) {
-            field = value
-            hintLayout2?.description?.text = value
-        }
     var counter: WalkthroughCounter? = null
     var hintLayout2: HintLayout? = null
     var commonLayout: ViewGroup? = null
 
     // optional
     var maxCountOfImpressions = 1
+    var animated = true
     var startAnchor: PointF = PointF(0f, 0f)
     var endAnchor: PointF = PointF(0f, 0f)
     val start = PointF()
     val end = PointF()
-    private val style: Int? = null
 
     fun from(view: View, hor: HorizontalAlignment, ver: VerticalAlignment, parentId: Int): WalkthroughBuilder {
         val left = getRelativeLeft(view, parentId)
@@ -66,7 +58,7 @@ class WalkthroughBuilder(val context: Context) {
         arrow.setSecondAnchorDelta(endAnchor.x, endAnchor.y)
 
         commonLayout!!.addView(arrow)
-        return Walkthrough(arrow, counter!!, maxCountOfImpressions, layout)
+        return Walkthrough(arrow, counter!!, layout, "AddTagWalkthrough", maxCountOfImpressions, animated)
     }
 
     private fun getRelativeLeft(myView: View, parentId: Int): Int {
@@ -110,6 +102,7 @@ class WalkthroughBuilder(val context: Context) {
 
         abstract fun multiplier(): Float
     }
+
     companion object {
         val TAG = "WalkthroughBuilder"
     }
