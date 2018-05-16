@@ -5,17 +5,15 @@ import android.graphics.*
 import android.util.AttributeSet
 import android.util.Log
 import android.view.View
-import kotlin.math.*
+import kotlin.math.PI
+import kotlin.math.atan2
+import kotlin.math.cos
+import kotlin.math.sin
 
 
 /**
  * Created on 10.05.18.
  */
-
-fun PointF.distanceTo(another: PointF): Float {
-    return sqrt((this.x - another.x).pow(2) + (this.y - another.y).pow(2))
-}
-
 class BezieArrow @JvmOverloads constructor(
         context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : View(context, attrs, defStyleAttr) {
@@ -25,10 +23,8 @@ class BezieArrow @JvmOverloads constructor(
 
     private val start: PointF
     private val end: PointF
-    private val firstMultiplier: PointF
-    //= PointF(0.2f, 0f)
-    private val secondMultiplier: PointF
-    //= PointF(-0.1f, 0f)
+    private val firstAnchorDeltas: PointF
+    private val secondAnchorDeltas: PointF
 
     private val line = Paint(Paint.ANTI_ALIAS_FLAG)
     private val path = Path()
@@ -49,18 +45,18 @@ class BezieArrow @JvmOverloads constructor(
         val toX = styleAttrs.getFloat(R.styleable.BezieArrow_toX, 0f)
         val fromY = styleAttrs.getFloat(R.styleable.BezieArrow_fromY, 0f)
         val toY = styleAttrs.getFloat(R.styleable.BezieArrow_toY, 0f)
-        val firstMultiplierX = styleAttrs.getFloat(R.styleable.BezieArrow_firstMultiplierX, 0f)
-        val firstMultiplierY = styleAttrs.getFloat(R.styleable.BezieArrow_firstMultiplierY, 0f)
-        val secondMultiplierX = styleAttrs.getFloat(R.styleable.BezieArrow_secondMultiplierX, 0f)
-        val secondMultiplierY = styleAttrs.getFloat(R.styleable.BezieArrow_secondMultiplierY, 0f)
+        val firstDeltaX = styleAttrs.getFloat(R.styleable.BezieArrow_firstDeltaX, 0f)
+        val firstDeltaY = styleAttrs.getFloat(R.styleable.BezieArrow_firstDeltaY, 0f)
+        val secondDeltaX = styleAttrs.getFloat(R.styleable.BezieArrow_secondDeltaX, 0f)
+        val secondDeltaY = styleAttrs.getFloat(R.styleable.BezieArrow_secondDeltaY, 0f)
         val width = styleAttrs.getDimension(R.styleable.BezieArrow_line_width, 6f)
         val color = styleAttrs.getColor(R.styleable.BezieArrow_line_color, Color.parseColor("#f5a623"))
         styleAttrs.recycle()
 
         start = PointF(fromX, fromY)
         end = PointF(toX, toY)
-        firstMultiplier = PointF(firstMultiplierX, firstMultiplierY)
-        secondMultiplier = PointF(secondMultiplierX, secondMultiplierY)
+        firstAnchorDeltas = PointF(firstDeltaX, firstDeltaY)
+        secondAnchorDeltas = PointF(secondDeltaX, secondDeltaY)
 
         line.style = Paint.Style.STROKE
         line.color = color
@@ -72,15 +68,15 @@ class BezieArrow @JvmOverloads constructor(
         evaluateArrowPoints()
     }
 
-    fun setFirstMultiplier(x: Float, y: Float) {
-        firstMultiplier.x = x
-        firstMultiplier.y = y
+    fun setFirstAnchorDelta(x: Float, y: Float) {
+        firstAnchorDeltas.x = x
+        firstAnchorDeltas.y = y
         evaluateArrowPoints()
     }
 
-    fun setSecondMultiplier(x: Float, y: Float) {
-        secondMultiplier.x = x
-        secondMultiplier.y = y
+    fun setSecondAnchorDelta(x: Float, y: Float) {
+        secondAnchorDeltas.x = x
+        secondAnchorDeltas.y = y
         evaluateArrowPoints()
     }
 
@@ -97,17 +93,14 @@ class BezieArrow @JvmOverloads constructor(
     }
 
     private fun evaluateArrowPoints() {
-        firstAnchor.x = start.x + firstMultiplier.x * start.x
-        firstAnchor.y = start.y + firstMultiplier.y * start.y
+        firstAnchor.x = start.x + firstAnchorDeltas.x
+        firstAnchor.y = start.y + firstAnchorDeltas.y
 
-        secondAnchor.x = end.x + end.x * secondMultiplier.x
-        secondAnchor.y = end.y + end.y * secondMultiplier.y
+        secondAnchor.x = end.x + secondAnchorDeltas.x
+        secondAnchor.y = end.y + secondAnchorDeltas.y
         Log.d(TAG, "First: $firstAnchor. Second: $secondAnchor")
 
-
-        // Point should varies between [0.93, 0.99] depending on distance to second anchor.
-        val proportion = 0.07f * end.distanceTo(secondAnchor) / end.distanceTo(start)
-        val before = Bezier(start, firstAnchor, secondAnchor, end).findFor(1.0f - min(0.07f, proportion))
+        val before = Bezier(start, firstAnchor, secondAnchor, end).findFor(0.99f)
         result.x = before.x
         result.y = before.y
         val angle = getAngle(end, result)
@@ -145,7 +138,8 @@ class BezieArrow @JvmOverloads constructor(
         arrowPath.lineTo(thirdArrowVertex.x, thirdArrowVertex.y)
         arrowPath.close()
         canvas.drawPath(arrowPath, arrow)
-        canvas.drawCircle(secondAnchor.x, secondAnchor.y, 20f, line)
+//        canvas.drawCircle(firstAnchor.x, firstAnchor.y, 20f, line)
+//        canvas.drawCircle(secondAnchor.x, secondAnchor.y, 20f, line)
         super.onDraw(canvas)
     }
 }

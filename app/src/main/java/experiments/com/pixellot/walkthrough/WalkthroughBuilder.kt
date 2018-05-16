@@ -30,8 +30,8 @@ class WalkthroughBuilder(val context: Context) {
     var maxCountOfImpressions = 1
     var startAnchor: PointF = PointF(0f, 0f)
     var endAnchor: PointF = PointF(0f, 0f)
-    private val start = PointF()
-    private val end = PointF()
+    val start = PointF()
+    val end = PointF()
     private val style: Int? = null
 
     fun from(view: View, hor: HorizontalAlignment, ver: VerticalAlignment, parentId: Int): WalkthroughBuilder {
@@ -62,15 +62,10 @@ class WalkthroughBuilder(val context: Context) {
         val arrow = BezieArrow(context, defStyleAttr = R.style.WalkthroughStyle)
         arrow.setStart(start.x, start.y)
         arrow.setEnd(end.x, end.y)
-        arrow.setFirstMultiplier(startAnchor.x, startAnchor.y)
-        arrow.setSecondMultiplier(endAnchor.x, endAnchor.y)
+        arrow.setFirstAnchorDelta(startAnchor.x, startAnchor.y)
+        arrow.setSecondAnchorDelta(endAnchor.x, endAnchor.y)
 
         commonLayout!!.addView(arrow)
-//        with(layout)
-//        {
-//            hint.text = text
-//            this.description.text = this@WalkthroughBuilder.description
-//        }
         return Walkthrough(arrow, counter!!, maxCountOfImpressions, layout)
     }
 

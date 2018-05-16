@@ -31,14 +31,14 @@
         <!--android:layout_width="match_parent"-->
         <!--android:layout_height="match_parent"-->
         <!--android:layout_gravity="center"-->
-        <!--app:firstMultiplierX="0.3"-->
-        <!--app:firstMultiplierY="0"-->
+        <!--app:firstMultiplierX="400"-->
+        <!--app:firstMultiplierY="100"-->
         <!--app:fromX="1250"-->
         <!--app:fromY="700"-->
         <!--app:line_color="#f5a623"-->
         <!--app:line_width="2dp"-->
-        <!--app:secondMultiplierX="-0.2"-->
-        <!--app:secondMultiplierY="-0.1"-->
+        <!--app:secondMultiplierX="-400"-->
+        <!--app:secondMultiplierY="-100"-->
         <!--app:toX="1600"-->
         <!--app:toY="450"/>-->
 

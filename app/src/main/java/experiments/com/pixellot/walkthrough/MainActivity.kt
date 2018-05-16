@@ -32,8 +32,8 @@ class MainActivity : AppCompatActivity() {
                 to(button, WalkthroughBuilder.HorizontalAlignment.START, WalkthroughBuilder.VerticalAlignment.CENTER, R.id.layout)
                 counter = TempWalkthroughCounter()
                 commonLayout = layout
-                startAnchor = PointF(0.3f, 0f)
-                endAnchor = PointF(-0.2f, 0.1f)
+                startAnchor = PointF(start.x * 0.3f, 0f)
+                endAnchor = PointF(end.x * -0.2f, end.y * 0.1f)
 
                 walkthrough = builder.build()
                 walkthrough.show(false)

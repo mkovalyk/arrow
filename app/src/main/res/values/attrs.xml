@@ -5,10 +5,10 @@
         <attr name="toX" format="float"/>
         <attr name="fromY" format="float"/>
         <attr name="toY" format="float"/>
-        <attr name="firstMultiplierX" format="float"/>
-        <attr name="firstMultiplierY" format="float"/>
-        <attr name="secondMultiplierX" format="float"/>
-        <attr name="secondMultiplierY" format="float"/>
+        <attr name="firstDeltaX" format="float"/>
+        <attr name="firstDeltaY" format="float"/>
+        <attr name="secondDeltaX" format="float"/>
+        <attr name="secondDeltaY" format="float"/>
         <attr name="line_width" format="dimension"/>
         <attr name="line_color" format="reference|color"/>
     </declare-styleable>
