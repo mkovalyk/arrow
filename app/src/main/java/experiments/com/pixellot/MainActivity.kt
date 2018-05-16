@@ -1,4 +1,4 @@
-package experiments.com.pixellot.walkthrough
+package experiments.com.pixellot
 
 import android.graphics.PointF
 import android.os.Bundle
@@ -6,6 +6,9 @@ import android.support.v7.app.AppCompatActivity
 import android.view.MotionEvent
 import android.view.View
 import android.widget.Toast
+import experiments.com.pixellot.walkthrough.Walkthrough
+import experiments.com.pixellot.walkthrough.WalkthroughBuilder
+import experiments.com.pixellot.walkthrough.WalkthroughCounter
 import kotlinx.android.synthetic.main.activity_main.*
 
 

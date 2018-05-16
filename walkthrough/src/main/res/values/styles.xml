@@ -1,0 +1,11 @@
+<resources>
+
+    <style name="WalkthroughStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="line_width">2dp</item>
+        <item name="line_color">#f5a623</item>
+        <item name="arrow_angle">15</item>
+        <item name="arrow_radius">16dp</item>
+    </style>
+</resources>
