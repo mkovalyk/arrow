@@ -7,6 +7,8 @@ import android.widget.LinearLayout
 import android.widget.TextView
 
 /**
+ * Just layout that holds two text labels - hint and description to it.
+ *
  * Created on 15.05.18.
  */
 class HintLayout @JvmOverloads constructor(

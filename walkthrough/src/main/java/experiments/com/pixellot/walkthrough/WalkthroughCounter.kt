@@ -14,5 +14,8 @@ interface WalkthroughCounter {
      */
     fun getCountOfImpressions(): Int
 
+    /**
+     * Resets all counters
+     */
     fun reset()
 }

@@ -9,6 +9,8 @@ import android.view.View.GONE
 import android.view.View.VISIBLE
 
 /**
+ * Walkthrough itself..
+ *
  * Created on 15.05.18.
  */
 class Walkthrough(var arrow: BezierArrow?, val counter: WalkthroughCounter,
@@ -95,7 +97,7 @@ class Walkthrough(var arrow: BezierArrow?, val counter: WalkthroughCounter,
     }
 
     companion object {
-        val TAG = Walkthrough::class.java.simpleName
+        val TAG: String = Walkthrough::class.java.simpleName
         const val DURATION = 300L
     }
 }

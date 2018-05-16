@@ -3,11 +3,19 @@ package experiments.com.pixellot.walkthrough
 import android.graphics.PointF
 
 /**
+ * Class that is used to get point that is lie on the cubic bezier curve.
+ *
+ *
  * Created on 11.05.18.
  */
 internal class Bezier(private val first: PointF, private val second: PointF, private val third: PointF,
                       private val forth: PointF) {
 
+    /**
+     * Detects position on Bezier curve.
+     *
+     * t [0, 1]. 0 - start of the curve, 1 - end.
+     */
     fun findFor(t: Float): PointF {
 
         val dt = 1f - t

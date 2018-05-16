@@ -3,7 +3,6 @@ package experiments.com.pixellot.walkthrough
 import android.content.Context
 import android.graphics.*
 import android.util.AttributeSet
-import android.util.Log
 import android.view.View
 import kotlin.math.atan2
 import kotlin.math.cos
@@ -11,27 +10,30 @@ import kotlin.math.sin
 
 
 /**
+ * View that draws Bezier curve and arrow at the end of it.
+ *
  * Created on 10.05.18.
  */
 class BezierArrow @JvmOverloads constructor(
-        context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
-) : View(context, attrs, defStyleAttr) {
+        context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) : View(context, attrs, defStyleAttr) {
 
-    private val radius: Float
-    private val angleDegree: Float
+    private val radius: Float // radius of the arrow i.e. length of the arrow line
+    private val angleDegree: Float // bigger angle - "wider" arrow should be
 
     private val start: PointF
     private val end: PointF
-    private val firstAnchorDeltas: PointF
+    private val firstAnchorDeltas: PointF // to be more flexible - just use relative values instead of absolute.
     private val secondAnchorDeltas: PointF
 
-    private val line = Paint(Paint.ANTI_ALIAS_FLAG)
-    private val path = Path()
+
+    private val linePaint = Paint(Paint.ANTI_ALIAS_FLAG)
+    private val arrowPaint = Paint(Paint.ANTI_ALIAS_FLAG)
+    private val linePath = Path()
     private val arrowPath = Path()
-    private val arrow = Paint(Paint.ANTI_ALIAS_FLAG)
+
     private val firstAnchor = PointF()
     private val secondAnchor = PointF()
-    private val result = PointF()
+    private val pointRightBeforeEnd = PointF()
     private val firstArrowVertex = PointF()
     private val secondArrowVertex = PointF()
     private val thirdArrowVertex = PointF()
@@ -60,13 +62,13 @@ class BezierArrow @JvmOverloads constructor(
         firstAnchorDeltas = PointF(firstDeltaX, firstDeltaY)
         secondAnchorDeltas = PointF(secondDeltaX, secondDeltaY)
 
-        line.style = Paint.Style.STROKE
-        line.color = color
-        line.strokeWidth = width
-        line.strokeCap = Paint.Cap.ROUND
+        linePaint.style = Paint.Style.STROKE
+        linePaint.color = color
+        linePaint.strokeWidth = width
+        linePaint.strokeCap = Paint.Cap.ROUND
 
-        arrow.style = Paint.Style.FILL
-        arrow.color = color
+        arrowPaint.style = Paint.Style.FILL
+        arrowPaint.color = color
         evaluateArrowPoints()
     }
 
@@ -100,12 +102,13 @@ class BezierArrow @JvmOverloads constructor(
 
         secondAnchor.x = end.x + secondAnchorDeltas.x
         secondAnchor.y = end.y + secondAnchorDeltas.y
-        Log.d(tag, "First: $firstAnchor. Second: $secondAnchor")
 
-        val before = Bezier(start, firstAnchor, secondAnchor, end).findFor(0.99f)
-        result.x = before.x
-        result.y = before.y
-        val angle = getAngle(end, result)
+        // evaluate point that is almost at the end. It is used to get angle between it and final point.
+        // this angle is used to draw arrow head.
+        val result = Bezier(start, firstAnchor, secondAnchor, end).findFor(0.99f)
+        pointRightBeforeEnd.x = result.x
+        pointRightBeforeEnd.y = result.y
+        val angle = getAngle(end, pointRightBeforeEnd)
 
         firstArrowVertex.x = end.x + cos(angle - angleDegree) * radius
         firstArrowVertex.y = end.y + sin(angle - angleDegree) * radius
@@ -115,22 +118,19 @@ class BezierArrow @JvmOverloads constructor(
 
         thirdArrowVertex.x = end.x
         thirdArrowVertex.y = end.y
-        Log.d(tag, "evaluateArrowPoints: first: $firstArrowVertex second: $secondArrowVertex")
     }
 
     private fun getAngle(first: PointF, second: PointF): Float {
-        val angle = atan2((second.y - first.y), (second.x - first.x))
-        Log.d(tag, "getAngle: ${Math.toDegrees(angle.toDouble())}")
-        return angle
+        return atan2((second.y - first.y), (second.x - first.x))
     }
 
     override fun onDraw(canvas: Canvas) {
         // draw line itself
-        path.reset()
+        linePath.reset()
 
-        path.moveTo(start.x, start.y)
-        path.cubicTo(firstAnchor.x, firstAnchor.y, secondAnchor.x, secondAnchor.y, result.x, result.y)
-        canvas.drawPath(path, line)
+        linePath.moveTo(start.x, start.y)
+        linePath.cubicTo(firstAnchor.x, firstAnchor.y, secondAnchor.x, secondAnchor.y, pointRightBeforeEnd.x, pointRightBeforeEnd.y)
+        canvas.drawPath(linePath, linePaint)
 
         // draw arrow with correct angle
         arrowPath.reset()
@@ -138,9 +138,6 @@ class BezierArrow @JvmOverloads constructor(
         arrowPath.lineTo(secondArrowVertex.x, secondArrowVertex.y)
         arrowPath.lineTo(thirdArrowVertex.x, thirdArrowVertex.y)
         arrowPath.close()
-        canvas.drawPath(arrowPath, arrow)
-//        canvas.drawCircle(firstAnchor.x, firstAnchor.y, 20f, line)
-//        canvas.drawCircle(secondAnchor.x, secondAnchor.y, 20f, line)
-        super.onDraw(canvas)
+        canvas.drawPath(arrowPath, arrowPaint)
     }
 }

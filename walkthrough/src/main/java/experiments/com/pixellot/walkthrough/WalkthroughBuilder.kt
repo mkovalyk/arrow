@@ -7,15 +7,19 @@ import android.view.ViewGroup
 import java.util.*
 
 /**
+ * Builder for [Walkthrough]
+ *
  * Created on 11.05.18.
  */
-class WalkthroughBuilder(val context: Context) {
+class WalkthroughBuilder(private val context: Context) {
     // mandatory
     var text: String? = null
     var description: String? = null
     var counter: WalkthroughCounter? = null
     var hintLayout2: HintLayout? = null
     var commonLayout: ViewGroup? = null
+    private var fromBinding: Binding? = null
+    private var toBinding: Binding? = null
 
     // optional
     var maxCountOfImpressions = 1
@@ -24,8 +28,6 @@ class WalkthroughBuilder(val context: Context) {
     var endAnchor: PointF = PointF(0f, 0f)
     private var start = PointF()
     private var end = PointF()
-    private var fromBinding: Binding? = null
-    private var toBinding: Binding? = null
 
     fun from(view: View, hor: HorizontalAlignment, ver: VerticalAlignment, parentId: Int): WalkthroughBuilder {
         fromBinding = Binding(view, hor, ver, parentId)
@@ -67,6 +69,7 @@ class WalkthroughBuilder(val context: Context) {
     }
 }
 
+@Suppress("MemberVisibilityCanBePrivate")
 class Binding(val view: View, val horizontal: HorizontalAlignment, val vertical: VerticalAlignment, val parentId: Int) {
     fun evaluate(): PointF {
         val left = getRelativeLeft(view, parentId)
