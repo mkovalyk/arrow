@@ -11,7 +11,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <experiments.com.pixellot.walkthrough.HintLayout
-        android:id="@+id/hintLayout"
+        android:id="@+id/hint_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="start|bottom"

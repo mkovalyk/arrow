@@ -17,17 +17,17 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         layout.setOnTouchListener { v, event -> buttonTouched(v, event) }
 
-        hintLayout.post(::createWalkthrough)
+        hint_layout.post(::createWalkthrough)
     }
 
     private fun createWalkthrough() {
         val builder = WalkthroughBuilder(this)
         with(builder) {
-            hintLayout2 = hintLayout
+            hintLayout = hint_layout
             text = "Set from Builder..."
             description = "Set description from Builder.."
 
-            from(hintLayout.hint, HorizontalAlignment.END, VerticalAlignment.CENTER, R.id.layout)
+            from(hint_layout.hint, HorizontalAlignment.END, VerticalAlignment.CENTER, R.id.layout)
             to(button, HorizontalAlignment.START, VerticalAlignment.CENTER , R.id.layout)
             counter = TempWalkthroughCounter()
             commonLayout = layout
@@ -42,7 +42,7 @@ class MainActivity : AppCompatActivity() {
                 walkthrough = this
             }
         }
-        hintLayout.setOnClickListener { walkthrough!!.dismiss() }
+        hint_layout.setOnClickListener { walkthrough!!.dismiss() }
         button.setOnClickListener { walkthrough!!.show() }
     }
 

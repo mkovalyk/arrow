@@ -16,7 +16,7 @@ class WalkthroughBuilder(private val context: Context) {
     var text: String? = null
     var description: String? = null
     var counter: WalkthroughCounter? = null
-    var hintLayout2: HintLayout? = null
+    var hintLayout: HintLayout? = null
     var commonLayout: ViewGroup? = null
     private var fromBinding: Binding? = null
     private var toBinding: Binding? = null
@@ -40,7 +40,7 @@ class WalkthroughBuilder(private val context: Context) {
     }
 
     fun build(): Walkthrough {
-        val layout = hintLayout2!!
+        val layout = hintLayout!!
         Objects.requireNonNull(layout, "Set layout to proceed...")
         Objects.requireNonNull(text, "Set hint text to proceed...")
         Objects.requireNonNull(description, "Set additional hint description to proceed...")
