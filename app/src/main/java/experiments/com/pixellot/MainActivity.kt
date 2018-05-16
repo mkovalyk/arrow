@@ -6,14 +6,11 @@ import android.support.v7.app.AppCompatActivity
 import android.view.MotionEvent
 import android.view.View
 import android.widget.Toast
-import experiments.com.pixellot.walkthrough.Walkthrough
-import experiments.com.pixellot.walkthrough.WalkthroughBuilder
-import experiments.com.pixellot.walkthrough.WalkthroughCounter
+import experiments.com.pixellot.walkthrough.*
 import kotlinx.android.synthetic.main.activity_main.*
 
 
 class MainActivity : AppCompatActivity() {
-    val TAG = "MainActivity"
     private var walkthrough: Walkthrough? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,20 +27,20 @@ class MainActivity : AppCompatActivity() {
             text = "Set from Builder..."
             description = "Set description from Builder.."
 
-            // width of the view after changing text doesn't apply immediately.
-            hintLayout.post({
-                from(hintLayout.hint, WalkthroughBuilder.HorizontalAlignment.END, WalkthroughBuilder.VerticalAlignment.CENTER, R.id.layout)
-                to(button, WalkthroughBuilder.HorizontalAlignment.START, WalkthroughBuilder.VerticalAlignment.CENTER, R.id.layout)
-                counter = TempWalkthroughCounter()
-                commonLayout = layout
-                startAnchor = PointF(start.x * 0.3f, 0f)
-                endAnchor = PointF(end.x * -0.2f, end.y * 0.1f)
-                maxCountOfImpressions = 5
+            from(hintLayout.hint, HorizontalAlignment.END, VerticalAlignment.CENTER, R.id.layout)
+            to(button, HorizontalAlignment.START, VerticalAlignment.CENTER , R.id.layout)
+            counter = TempWalkthroughCounter()
+            commonLayout = layout
+            startAnchor = PointF(0.3f, 0f)
+            endAnchor = PointF(-0.2f, 0.1f)
+            maxCountOfImpressions = 5
 
-                walkthrough = builder.build()
-                walkthrough!!.dismissListener = { Toast.makeText(this@MainActivity, "Invoked From listener", Toast.LENGTH_SHORT).show() }
-                walkthrough!!.show()
-            })
+            with(builder.build())
+            {
+                this.dismissListener = { Toast.makeText(this@MainActivity, "Invoked From listener", Toast.LENGTH_SHORT).show() }
+                this.show()
+                walkthrough = this
+            }
         }
         hintLayout.setOnClickListener { walkthrough!!.dismiss() }
         button.setOnClickListener { walkthrough!!.show() }

@@ -2,7 +2,6 @@ package experiments.com.pixellot.walkthrough
 
 import android.content.Context
 import android.graphics.PointF
-import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import java.util.*
@@ -23,23 +22,18 @@ class WalkthroughBuilder(val context: Context) {
     var animated = true
     var startAnchor: PointF = PointF(0f, 0f)
     var endAnchor: PointF = PointF(0f, 0f)
-    val start = PointF()
-    val end = PointF()
+    private var start = PointF()
+    private var end = PointF()
+    private var fromBinding: Binding? = null
+    private var toBinding: Binding? = null
 
     fun from(view: View, hor: HorizontalAlignment, ver: VerticalAlignment, parentId: Int): WalkthroughBuilder {
-        val left = getRelativeLeft(view, parentId)
-        val top = getRelativeTop(view, parentId)
-        start.x = left + hor.multiplier() * view.measuredWidth
-        start.y = top + ver.multiplier() * view.measuredHeight
-        Log.d(TAG, "from: $start $view.")
+        fromBinding = Binding(view, hor, ver, parentId)
         return this
     }
 
     fun to(view: View, hor: HorizontalAlignment, ver: VerticalAlignment, parentId: Int): WalkthroughBuilder {
-        val left = getRelativeLeft(view, parentId)
-        val top = getRelativeTop(view, parentId)
-        end.x = left + hor.multiplier() * view.measuredWidth
-        end.y = top + ver.multiplier() * view.measuredHeight
+        toBinding = Binding(view, hor, ver, parentId)
         return this
     }
 
@@ -50,15 +44,36 @@ class WalkthroughBuilder(val context: Context) {
         Objects.requireNonNull(description, "Set additional hint description to proceed...")
         Objects.requireNonNull(commonLayout, "Set layout to proceed...")
         Objects.requireNonNull(counter, "...And don't forget to pass WalkthroughCounter.")
+        Objects.requireNonNull(fromBinding, "Oops, you forgot to add view to start from")
+        Objects.requireNonNull(toBinding, "Oops, you forgot to add view to end with")
 
+        if (layout.hint.text != text) {
+            layout.hint.text = text
+        }
+        if (layout.description.text != description) {
+            layout.description.text = description
+        }
         val arrow = BezierArrow(context)
-        arrow.setStart(start.x, start.y)
-        arrow.setEnd(end.x, end.y)
-        arrow.setFirstAnchorDelta(startAnchor.x, startAnchor.y)
-        arrow.setSecondAnchorDelta(endAnchor.x, endAnchor.y)
-
-        commonLayout!!.addView(arrow)
+        layout.description.post {
+            start = fromBinding!!.evaluate()
+            arrow.setStart(start.x, start.y)
+            end = toBinding!!.evaluate()
+            arrow.setEnd(end.x, end.y)
+            arrow.setFirstAnchorDelta(startAnchor.x * start.x, startAnchor.y * start.y)
+            arrow.setSecondAnchorDelta(endAnchor.x * end.x, endAnchor.y * end.y)
+            commonLayout!!.addView(arrow)
+        }
         return Walkthrough(arrow, counter!!, layout, "AddTagWalkthrough", maxCountOfImpressions, animated)
+    }
+}
+
+class Binding(val view: View, val horizontal: HorizontalAlignment, val vertical: VerticalAlignment, val parentId: Int) {
+    fun evaluate(): PointF {
+        val left = getRelativeLeft(view, parentId)
+        val top = getRelativeTop(view, parentId)
+        val x = left + horizontal.multiplier() * view.measuredWidth
+        val y = top + vertical.multiplier() * view.measuredHeight
+        return PointF(x, y)
     }
 
     private fun getRelativeLeft(myView: View, parentId: Int): Int {
@@ -74,37 +89,33 @@ class WalkthroughBuilder(val context: Context) {
         else
             myView.top + getRelativeTop(myView.parent as View, parentId)
     }
+}
 
-    enum class HorizontalAlignment {
-        START {
-            override fun multiplier() = 0.0f
-        },
-        END {
-            override fun multiplier() = 1.0f
-        },
-        CENTER {
-            override fun multiplier() = 0.5f
-        };
+enum class HorizontalAlignment {
+    START {
+        override fun multiplier() = 0.0f
+    },
+    END {
+        override fun multiplier() = 1.0f
+    },
+    CENTER {
+        override fun multiplier() = 0.5f
+    };
 
-        abstract fun multiplier(): Float
-    }
+    abstract fun multiplier(): Float
+}
 
-    enum class VerticalAlignment {
-        TOP {
-            override fun multiplier() = 0f
-        },
-        BOTTOM {
-            override fun multiplier() = 1.0f
-        },
-        CENTER {
-            override fun multiplier() = 0.5f
-        };
+enum class VerticalAlignment {
+    TOP {
+        override fun multiplier() = 0f
+    },
+    BOTTOM {
+        override fun multiplier() = 1.0f
+    },
+    CENTER {
+        override fun multiplier() = 0.5f
+    };
 
-        abstract fun multiplier(): Float
-    }
-
-    companion object {
-        val TAG = "WalkthroughBuilder"
-    }
+    abstract fun multiplier(): Float
 }
 
