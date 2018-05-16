@@ -71,8 +71,8 @@ class Binding(val view: View, val horizontal: HorizontalAlignment, val vertical:
     fun evaluate(): PointF {
         val left = getRelativeLeft(view, parentId)
         val top = getRelativeTop(view, parentId)
-        val x = left + horizontal.multiplier() * view.measuredWidth
-        val y = top + vertical.multiplier() * view.measuredHeight
+        val x = left + horizontal.multiplier * view.measuredWidth
+        val y = top + vertical.multiplier * view.measuredHeight
         return PointF(x, y)
     }
 
@@ -91,31 +91,11 @@ class Binding(val view: View, val horizontal: HorizontalAlignment, val vertical:
     }
 }
 
-enum class HorizontalAlignment {
-    START {
-        override fun multiplier() = 0.0f
-    },
-    END {
-        override fun multiplier() = 1.0f
-    },
-    CENTER {
-        override fun multiplier() = 0.5f
-    };
-
-    abstract fun multiplier(): Float
+enum class HorizontalAlignment(val multiplier: Float) {
+    START(0.0f), END(1.0f), CENTER(0.5f)
 }
 
-enum class VerticalAlignment {
-    TOP {
-        override fun multiplier() = 0f
-    },
-    BOTTOM {
-        override fun multiplier() = 1.0f
-    },
-    CENTER {
-        override fun multiplier() = 0.5f
-    };
-
-    abstract fun multiplier(): Float
+enum class VerticalAlignment(val multiplier: Float) {
+    TOP(0f), BOTTOM(1.0f), CENTER(0.5f)
 }
 
